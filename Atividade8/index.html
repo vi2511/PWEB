@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pesquisa</title>
+  <script>
+
+    const resultado = [];
+    var qtdMasc = [];
+    var qtdFem = 0;
+    var qtdPessimo = 0;
+    var media = 0;
+    var porcentagem = 0;
+    var maisVelha = [];
+    var maisNova = [];
+
+    function Gravar() {
+
+      const add = {
+        idade: parseInt(document.getElementById('idade').value),
+        sexo: document.getElementById('sexo').value,
+        opnion: document.getElementById('opnion').value,
+      }
+      resultado.push(add)
+      alert('Foram gravados ' + resultado.length + ' pesquisa(s)')
+    }
+
+    function Resultado() {
+      var soma = 0;
+      var qtdOtimoBom = 0;
+      var result = [...resultado]
+
+      document.getElementById("idade").addEventListener("keypress", OnkeyPress(event));
+
+      resultado.forEach((r) => {
+        soma = soma + r.idade;
+        qtdPessimo = qtdPessimo + (r.opnion === '1' ? 1 : 0);
+      });
+
+      maisNova = result.sort((a, b) => {
+        if (a.idade > b.idade) return 1;
+        if (a.idade < b.idade) return -1;
+        if (a.idade == b.idade) return 0;
+      });
+
+      maisVelha = resultado.sort((a, b) => {
+        if (b.idade > a.idade) return 1;
+        if (b.idade < a.idade) return -1;
+        if (b.idade == a.idade) return 0;
+      });
+
+      media = soma / resultado.length;
+      qtdOtimoBom = resultado.filter((f) => f.opnion === '3' || f.opnion === '4');
+      qtdMasc = resultado.filter((f) => f.sexo === 'M');
+      qtdFem = resultado.filter((f) => f.sexo === 'F');
+      porcentagem = (qtdOtimoBom.length / resultado.length) * 100;
+
+      alert(
+        'Foram pesquisados um total de ' + resultado.length + ' pessoas. \n' +
+        'Média da idade: ' + media + '\n' +
+        'Idade da mais velha: ' + maisVelha[0].idade + '\n' +
+        'Idade da mais nova: ' + maisNova[0].idade + '\n' +
+        'Quantidade que votaram péssimo: ' + qtdPessimo + '\n' +
+        'Porcentagem de Ótimos/Bons: ' + porcentagem + '%\n' +
+        'Quantidade Homens: ' + qtdMasc.length + '\n' +
+        'Quantidade Mulheres: ' + qtdMasc.length + '\n'
+      )
+
+    }
+
+    function OnkeyPress(event) {
+      console.log(event)
+      if (event.which == 13 || event.keyCode == 13) {
+        Gravar()
+      }
+    }
+
+  </script>
+</head>
+
+<body>
+  <p>
+    <label>Idade</label>
+    <br>
+    <input type="number" id="idade" required autofocus onkeypress=OnkeyPress(event)>
+  </p>
+  <p>
+    <label>Sexo</label>
+    <br>
+    <select id="sexo">
+      <option value="M">Masculino</option>
+      <option value="F">Feminino</option>
+    </select>
+  </p>
+
+  <p>
+    <label>Opnião</label>
+    <br>
+    <select id="opnion">
+      <option value="1">Péssimo</option>
+      <option value="2">Regular</option>
+      <option value="3">Bom</option>
+      <option value="4">Ótimo</option>
+    </select>
+  </p>
+  <br><br><br><br>
+  <input id="gravar" type="submit" value="Gravar" onClick=Gravar()>
+  <br>
+  <input type="submit" value="Resultado" onClick=Resultado()>
+</body>
+
+</html>
